@@ -34,11 +34,16 @@ fun main() {
     var parentSum = sumItemsCapacity(parent, items)
 
     if (parentSum != bagCapacity) {
-        for (it in (1..1000000)) {
+        for (it in (1..100)) {
             val child = createAndMutateChild(parent)
             val childSum = sumItemsCapacity(child, items)
 
-            if (parentSum > bagCapacity && childSum > bagCapacity) {
+            if (childSum == bagCapacity) {
+                parent = child
+                parentSum = childSum
+                break
+            }
+            else if (parentSum > bagCapacity && childSum > bagCapacity) {
                 val parentDiff = parentSum - bagCapacity
                 val childDiff = childSum - bagCapacity
 
