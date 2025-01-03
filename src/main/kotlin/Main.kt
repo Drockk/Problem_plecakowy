@@ -1,6 +1,25 @@
 package org.example
 
 import kotlin.random.Random
+import kotlin.system.exitProcess
+
+fun parseArguments(args: Array<String>): IntArray {
+    check(args.isNotEmpty()) {
+        "No arguments given!"
+    }
+
+    val argumentCount = 4
+    check(args.count() == argumentCount) {
+        "Wrong number of arguments"
+    }
+
+    return intArrayOf(
+        args[0].toInt(),
+        args[1].toInt(),
+        args[2].toInt(),
+        args[3].toInt()
+    )
+}
 
 fun createAndMutateChild(obj: List<Boolean>): List<Boolean> {
     val position = Random.nextInt(0, 100)
@@ -22,11 +41,25 @@ fun sumItemsCapacity(obj: List<Boolean>, items: List<Int>): Int {
     return result
 }
 
-fun main() {
-    val bagCapacity = 2500
-    val itemCount = 100
-    val itemCapacityMin = 10
-    val itemCapacityMax = 90
+fun main(args: Array<String>) {
+    val parsedArguments = try {
+        parseArguments(args)
+    }
+    catch (e: IllegalStateException) {
+        println(e.message)
+        exitProcess(-1)
+    }
+
+    val bagCapacity = parsedArguments[0]
+    val itemCount = parsedArguments[1]
+    val itemCapacityMin = parsedArguments[2]
+    val itemCapacityMax = parsedArguments[3]
+
+    println("Given Arguments")
+    println("Bag capacity:          $bagCapacity")
+    println("Item count:            $itemCount")
+    println("Item capacity minimum: $itemCapacityMin")
+    println("Item capacity maximum: $itemCapacityMax")
 
     val items = List(itemCount) { Random.nextInt(itemCapacityMin, itemCapacityMax) }
 
@@ -34,7 +67,7 @@ fun main() {
     var parentSum = sumItemsCapacity(parent, items)
 
     if (parentSum != bagCapacity) {
-        for (it in (1..100)) {
+        for (it in (1..10000)) {
             val child = createAndMutateChild(parent)
             val childSum = sumItemsCapacity(child, items)
 
@@ -61,7 +94,15 @@ fun main() {
         }
     }
 
+    println("")
     println("Final result")
-    println("Result: $parent")
-    println("Capacity: $parentSum")
+    println("Packed items sizes")
+    parent.zip(items).forEach {
+        pair -> if (pair.first) {
+            print("${pair.second} ")
+        }
+    }
+    println("")
+    println("Proposed capacity: $parentSum")
+    println("Difference(Bag capacity - Proposed capacity): ${bagCapacity - parentSum}")
 }
