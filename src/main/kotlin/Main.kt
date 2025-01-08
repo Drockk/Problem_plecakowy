@@ -8,7 +8,7 @@ fun parseArguments(args: Array<String>): IntArray {
         "No arguments given!"
     }
 
-    val argumentCount = 4
+    val argumentCount = 5
     check(args.count() == argumentCount) {
         "Wrong number of arguments"
     }
@@ -17,7 +17,8 @@ fun parseArguments(args: Array<String>): IntArray {
         args[0].toInt(),
         args[1].toInt(),
         args[2].toInt(),
-        args[3].toInt()
+        args[3].toInt(),
+        args[4].toInt()
     )
 }
 
@@ -50,12 +51,14 @@ fun main(args: Array<String>) {
         exitProcess(-1)
     }
 
-    val bagCapacity = parsedArguments[0]
-    val itemCount = parsedArguments[1]
-    val itemCapacityMin = parsedArguments[2]
-    val itemCapacityMax = parsedArguments[3]
+    val iterations = parsedArguments[0]
+    val bagCapacity = parsedArguments[1]
+    val itemCount = parsedArguments[2]
+    val itemCapacityMin = parsedArguments[3]
+    val itemCapacityMax = parsedArguments[4]
 
     println("Given Arguments")
+    println("Iterations:            $iterations")
     println("Bag capacity:          $bagCapacity")
     println("Item count:            $itemCount")
     println("Item capacity minimum: $itemCapacityMin")
@@ -67,7 +70,7 @@ fun main(args: Array<String>) {
     var parentSum = sumItemsCapacity(parent, items)
 
     if (parentSum != bagCapacity) {
-        for (it in (1..10000)) {
+        for (it in (1..iterations)) {
             val child = createAndMutateChild(parent)
             val childSum = sumItemsCapacity(child, items)
 
@@ -98,9 +101,9 @@ fun main(args: Array<String>) {
     println("Final result")
     println("Packed items sizes")
     parent.zip(items).forEach {
-        pair -> if (pair.first) {
-            print("${pair.second} ")
-        }
+            pair -> if (pair.first) {
+        print("${pair.second} ")
+    }
     }
     println("")
     println("Proposed capacity: $parentSum")
